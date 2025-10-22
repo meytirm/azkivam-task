@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
   devtools: { enabled: true },
+  css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
       apiBase: 'https://interview-api.azkivam.com/api/v1',
