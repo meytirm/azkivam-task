@@ -23,7 +23,7 @@ export const useApi = () => {
 
   function post<ResponseType>(url: string, options?: FetchOptions<'json'>, body?: RequestType): Promise<ResponseType> {
     return api<ResponseType>(url, {
-      method: 'GET',
+      method: 'POST',
       body: body,
       ...options,
     })
