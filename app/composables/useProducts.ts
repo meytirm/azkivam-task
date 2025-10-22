@@ -1,4 +1,5 @@
 import { useApi } from '~/composables/useApi'
+import type { ProductResponse } from '~~/types/products'
 
 type RequestType = {
   merchantIds: number[]
@@ -7,8 +8,8 @@ type RequestType = {
 export const useProducts = () => {
   const api = useApi()
 
-  function findAll(page: number, size: number, body?: RequestType) {
-    return api.post('/products', {
+  function findAll(page: number = 1, size: number = 5, body?: RequestType) {
+    return api.post<ProductResponse>('/products', {
       params: {
         page,
         size,
@@ -16,8 +17,8 @@ export const useProducts = () => {
       body: body,
     })
   }
-  function findByCategoryId(page: number, size: number, id: number, body?: RequestType) {
-    return api.post(`/products/${id}`, {
+  function findByCategoryId(page: number = 1, size: number = 5, id: number, body?: RequestType) {
+    return api.post<ProductResponse>(`/products/${id}`, {
       params: {
         page,
         size,
