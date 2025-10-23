@@ -5,7 +5,7 @@ export const useCategories = () => {
   const api = useApi()
 
   function findAll() {
-    return api.post<CategoryResponse>('/categories')
+    return api.get<CategoryResponse>('/categories')
   }
 
   return { findAll }
