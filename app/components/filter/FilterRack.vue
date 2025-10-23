@@ -14,6 +14,11 @@
         </p>
       </template>
     </UAccordion>
+    <USeparator
+      class="my-5"
+      color="info"
+    />
+    <div>فروشگاه‌ها</div>
   </UCard>
 </template>
 
