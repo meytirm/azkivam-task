@@ -19,14 +19,22 @@
       color="info"
     />
     <div>فروشگاه‌ها</div>
+    <UInput
+      icon="i-lucide-search"
+      size="md"
+      variant="outline"
+      placeholder="جستجوی فروشگاه"
+    />
   </UCard>
 </template>
 
 <script setup lang="ts">
 import type { Category } from '~~/types/categories'
+import type { Merchant } from '~~/types/merchants'
 
 const props = defineProps<{
   categories: Category[]
+  merchants: Merchant[]
 }>()
 
 const parenCategories = computed(() => props.categories
