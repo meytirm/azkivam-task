@@ -4,7 +4,7 @@ import type { UnwrapRef } from 'vue'
 export function useInfiniteScroll<T>(
   asyncFunc: (page: number, size: number) => Promise<T[]>,
   initialData: Ref<T[]>,
-  pageSize: number = 12,
+  pageSize: number,
 ) {
   const page = ref(1)
   const items = ref<T[]>([...initialData.value])
@@ -13,6 +13,7 @@ export function useInfiniteScroll<T>(
 
   watch(initialData, () => {
     items.value = initialData.value
+    isFinished.value = false
   })
 
   async function onScroll() {
