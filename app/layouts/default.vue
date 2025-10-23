@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-
+useState('accordionState', () => [])
 </script>
 
 <style scoped>

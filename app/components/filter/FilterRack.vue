@@ -1,8 +1,10 @@
 <template>
   <UCard>
     <UAccordion
+      v-model="accordionState"
       :items="parenCategories"
       label-key="name"
+      type="multiple"
     >
       <template #content="{ item }">
         <p
@@ -38,6 +40,7 @@
 import type { Category } from '~~/types/categories'
 import type { Merchant } from '~~/types/merchants'
 import type { CheckboxGroupItem } from '#ui/components/CheckboxGroup.vue'
+import { useState } from '#app'
 
 const router = useRouter()
 const props = defineProps<{
@@ -45,6 +48,7 @@ const props = defineProps<{
   merchants: Merchant[]
 }>()
 
+const accordionState = useState<string[]>('accordionState')
 const selectedMerchants = ref([])
 const merchantsFiltered = props.merchants as CheckboxGroupItem[]
 

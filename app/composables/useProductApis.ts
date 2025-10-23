@@ -9,10 +9,10 @@ export function useProductApis(categoryId: string, merchantNumberIds: Ref<number
       merchantIds: merchantNumberIds.value,
     })
   }
-  const { data: products } = useAsyncData(`products-${categoryId}`,
+  const { data: products, error, pending, refresh } = useAsyncData(`products-${categoryId}`,
     () => productApiFunction(1, pageSize), {
       watch: [merchantNumberIds],
     })
 
-  return { productApiFunction, products }
+  return { productApiFunction, products, error, pending, refresh }
 }

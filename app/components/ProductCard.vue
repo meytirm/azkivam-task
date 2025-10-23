@@ -5,7 +5,10 @@
       root: 'min-h-[300px]',
     }"
   >
-    <NuxtImg :src="product.imageUrl" />
+    <NuxtImg
+      :src="product.imageUrl"
+      alt="تصویر محصول"
+    />
     <div>{{ product.name }}</div>
     <div>
       <div>شروع قیمت از:</div>
