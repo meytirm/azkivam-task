@@ -3,13 +3,17 @@ import type { UnwrapRef } from 'vue'
 
 export function useInfiniteScroll<T>(
   asyncFunc: (page: number, size: number) => Promise<T[]>,
-  initialData: T[] = [],
+  initialData: Ref<T[]>,
   pageSize: number = 12,
 ) {
   const page = ref(1)
-  const items = ref<T[]>([...initialData])
+  const items = ref<T[]>([...initialData.value])
   const isLoading = ref(false)
   const isFinished = ref(false)
+
+  watch(initialData, () => {
+    items.value = initialData.value
+  })
 
   async function onScroll() {
     const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
