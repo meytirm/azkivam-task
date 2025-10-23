@@ -8,14 +8,14 @@ export function useInfiniteScroll<T>(
 ) {
   const page = ref(1)
   const items = ref<T[]>([...initialData])
-  const loading = ref(false)
+  const isLoading = ref(false)
   const isFinished = ref(false)
 
   async function onScroll() {
     const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
     if (nearBottom) {
-      if (loading.value || isFinished.value) return
-      loading.value = true
+      if (isLoading.value || isFinished.value) return
+      isLoading.value = true
       page.value++
       try {
         const res = await asyncFunc(page.value, pageSize)
@@ -28,7 +28,7 @@ export function useInfiniteScroll<T>(
         console.log(e)
       }
       finally {
-        loading.value = false
+        isLoading.value = false
       }
     }
   }
@@ -43,5 +43,5 @@ export function useInfiniteScroll<T>(
     window.removeEventListener('scroll', onScroll)
   })
 
-  return { items, loading }
+  return { items, isLoading }
 }
