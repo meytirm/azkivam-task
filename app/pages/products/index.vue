@@ -46,11 +46,11 @@ const categoriesData = categories.value ? categories.value.data : []
 
 const merchantsData = merchants.value ? merchants.value.data : []
 
-const initialData = data.value ? data.value.data : []
+const initialData = computed(() => data.value ? data.value.data : [])
 
 const productApiFunc = (page: number, size: number) => products.findAll(page, size).then(res => res.data)
 
-const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData || [])
+const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData)
 </script>
 
 <style scoped>
