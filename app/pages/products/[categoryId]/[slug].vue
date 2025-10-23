@@ -37,21 +37,37 @@ import { useCategories } from '~/composables/useCategories'
 
 const route = useRoute()
 const categoryId = route.params.categoryId as string
-console.log(categoryId)
+
+const merchantNumberIds = computed(() => {
+  const merchantIds = (route.query.merchantIds) as string[] | string | undefined
+  if (Array.isArray(merchantIds)) {
+    return merchantIds.map((id: string) => +id)
+  }
+  if (merchantIds) {
+    return [+merchantIds]
+  }
+  return []
+})
+
 const products = useProducts()
 const categoriesApi = useCategories()
 const merchantsApi = useMerchants()
-const { data } = await useAsyncData(`products-${categoryId}`, () => products.findByCategoryId(1, 12, +categoryId))
+const { data } = await useAsyncData(`products-${categoryId}`,
+  () => products.findByCategoryId(1, 12, +categoryId, {
+    merchantIds: merchantNumberIds.value,
+  }),
+  { watch: [merchantNumberIds] })
 const { data: categories } = await useAsyncData('categories', () => categoriesApi.findAll())
 const { data: merchants } = await useAsyncData('merchants', () => merchantsApi.findAll())
+
 const categoriesData = categories.value ? categories.value.data : []
 const merchantsData = merchants.value ? merchants.value.data : []
+const initialData = computed(() => data.value ? data.value.data : [])
 
-const initialData = data.value ? data.value.data : []
+const productApiFunc = (page: number, size: number) => products.findByCategoryId(page, size, +categoryId)
+  .then(res => res.data)
 
-const productApiFunc = (page: number, size: number) => products.findByCategoryId(page, size, +categoryId).then(res => res.data)
-
-const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData || [])
+const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData)
 </script>
 
 <style scoped>
