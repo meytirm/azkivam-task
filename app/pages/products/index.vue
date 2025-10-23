@@ -19,7 +19,10 @@
     <template #right>
       <div>
         <UPageAside>
-          <FilterRack :categories="categoriesData" />
+          <FilterRack
+            :categories="categoriesData"
+            :merchants="merchantsData"
+          />
         </UPageAside>
       </div>
     </template>
@@ -34,9 +37,14 @@ import { useCategories } from '~/composables/useCategories'
 
 const products = useProducts()
 const categoriesApi = useCategories()
+const merchantsApi = useMerchants()
 const { data } = await useAsyncData('products', () => products.findAll(1, 12))
 const { data: categories } = await useAsyncData('categories', () => categoriesApi.findAll())
+const { data: merchants } = await useAsyncData('merchants', () => merchantsApi.findAll())
+
 const categoriesData = categories.value ? categories.value.data : []
+
+const merchantsData = merchants.value ? merchants.value.data : []
 
 const initialData = data.value ? data.value.data : []
 

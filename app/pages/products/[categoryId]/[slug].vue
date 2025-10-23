@@ -19,7 +19,10 @@
     <template #right>
       <div>
         <UPageAside>
-          <FilterRack :categories="categoriesData" />
+          <FilterRack
+            :categories="categoriesData"
+            :merchants="merchantsData"
+          />
         </UPageAside>
       </div>
     </template>
@@ -37,9 +40,12 @@ const categoryId = route.params.categoryId as string
 console.log(categoryId)
 const products = useProducts()
 const categoriesApi = useCategories()
+const merchantsApi = useMerchants()
 const { data } = await useAsyncData(`products-${categoryId}`, () => products.findByCategoryId(1, 12, +categoryId))
 const { data: categories } = await useAsyncData('categories', () => categoriesApi.findAll())
+const { data: merchants } = await useAsyncData('merchants', () => merchantsApi.findAll())
 const categoriesData = categories.value ? categories.value.data : []
+const merchantsData = merchants.value ? merchants.value.data : []
 
 const initialData = data.value ? data.value.data : []
 
