@@ -10,6 +10,11 @@
         <ProductSkeleton v-if="isLoading" />
       </div>
     </template>
+    <template #right>
+      <UPageAside>
+        filter
+      </UPageAside>
+    </template>
   </UPage>
 </template>
 
