@@ -1,4 +1,4 @@
-export function useProductApis(categoryId: string, merchantNumberIds: Ref<number[]>) {
+export function useProductApis(categoryId: string, merchantNumberIds: Ref<number[]>, pageSize: number) {
   const productApi = useProducts()
 
   let productApiFunction = (page: number, size: number) => productApi.findAll(page, size, {
@@ -10,7 +10,7 @@ export function useProductApis(categoryId: string, merchantNumberIds: Ref<number
     })
   }
   const { data: products } = useAsyncData(`products-${categoryId}`,
-    () => productApiFunction(1, 12), {
+    () => productApiFunction(1, pageSize), {
       watch: [merchantNumberIds],
     })
 
