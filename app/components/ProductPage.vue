@@ -1,12 +1,36 @@
 <template>
   <UPage
-    right="lg"
     :ui="{
       left: 'lg:col-span-3',
       center: 'lg:col-span-7',
     }"
   >
     <template #default>
+      <div>
+        <UModal
+          v-model:open="filterModal"
+          fullscreen
+          title="Modal fullscreen"
+        >
+          <template #body>
+            <FilterRack
+              :categories="categoriesData"
+              :merchants="merchantsData"
+            />
+          </template>
+        </UModal>
+        <span
+          class="flex items-center gap-2 cursor-pointer lg:hidden"
+          @click="filterModal = true"
+        >
+          <UIcon
+            name="mdi:mixer-settings"
+            class="size-5"
+          />
+          فیلترها
+        </span>
+        <USeparator class="my-4" />
+      </div>
       <ProductSkeleton v-if="pending" />
       <ProductsRack
         v-if="items.length > 0"
@@ -14,7 +38,7 @@
       />
       <UAlert
         v-if="items.length === 0 && (!pending)"
-        title="There is no products!"
+        title="محصولی پیدا نشد!"
         variant="outline"
         color="info"
       />
@@ -31,7 +55,11 @@
     </template>
     <template #left>
       <div>
-        <UPageAside>
+        <UPageAside
+          :ui="{
+            root: 'pt-1',
+          }"
+        >
           <FilterRack
             :categories="categoriesData"
             :merchants="merchantsData"
@@ -48,6 +76,7 @@ import type { Product } from '~~/types/products'
 const route = useRoute()
 const categoryId = route.params.categoryId as string
 const pageSize = 12
+const filterModal = ref<boolean>(false)
 
 const merchantNumberIds = computed(() => {
   const merchantIds = (route.query.merchantIds) as string[] | string | undefined
