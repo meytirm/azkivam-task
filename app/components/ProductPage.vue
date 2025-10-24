@@ -10,7 +10,7 @@
         <UModal
           v-model:open="filterModal"
           fullscreen
-          title="Modal fullscreen"
+          title="فیلتر محصولات"
         >
           <template #body>
             <FilterRack
@@ -29,7 +29,7 @@
           />
           فیلترها
         </span>
-        <USeparator class="my-4" />
+        <USeparator class="my-4 lg:hidden" />
       </div>
       <ProductSkeleton v-if="pending" />
       <ProductsRack
