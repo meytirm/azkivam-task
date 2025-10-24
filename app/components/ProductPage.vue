@@ -37,7 +37,7 @@
         :products="items"
       />
       <UAlert
-        v-if="items.length === 0 && (!pending)"
+        v-if="items.length === 0 && (!pending) && !error"
         title="محصولی پیدا نشد!"
         variant="outline"
         color="info"
