@@ -10,7 +10,7 @@
         <UModal
           v-model:open="filterModal"
           fullscreen
-          title="Modal fullscreen"
+          title="فیلتر محصولات"
         >
           <template #body>
             <FilterRack
@@ -29,7 +29,7 @@
           />
           فیلترها
         </span>
-        <USeparator class="my-4" />
+        <USeparator class="my-4 lg:hidden" />
       </div>
       <ProductSkeleton v-if="pending" />
       <ProductsRack
@@ -37,7 +37,7 @@
         :products="items"
       />
       <UAlert
-        v-if="items.length === 0 && (!pending)"
+        v-if="items.length === 0 && (!pending) && !error"
         title="محصولی پیدا نشد!"
         variant="outline"
         color="info"
@@ -73,23 +73,14 @@
 <script setup lang="ts">
 import type { Product } from '~~/types/products'
 
+const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
+
 const route = useRoute()
 const categoryId = route.params.categoryId as string
 const pageSize = 12
 const filterModal = ref<boolean>(false)
 
-const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string[] | string | undefined
-  if (Array.isArray(merchantIds)) {
-    return merchantIds.map((id: string) => +id)
-  }
-  if (merchantIds) {
-    return [+merchantIds]
-  }
-  return []
-})
-
-const { productApiFunction, products, pending, error, refresh } = useProductApis(categoryId, merchantNumberIds, pageSize)
+const { productApiFunction, products, pending, error, refresh } = useProductApis(categoryId, merchantIdsFromQuery, pageSize)
 const categoriesApi = useCategories()
 const merchantsApi = useMerchants()
 
@@ -102,12 +93,10 @@ const initialData = computed(() => {
   if (pending.value) {
     return []
   }
-  return products.value ? products.value.data : []
+  return products.value ? products.value : []
 })
 
-const productApiFunc = (page: number, size: number) => productApiFunction(page, size).then(res => res.data)
-
-const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData, pageSize)
+const { items, isLoading } = useInfiniteScroll<Product>(productApiFunction, initialData, pageSize)
 </script>
 
 <style scoped>

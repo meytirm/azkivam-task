@@ -22,34 +22,28 @@
 <script setup lang="ts">
 import type { Merchant } from '~~/types/merchants'
 import type { CheckboxGroupItem } from '#ui/components/CheckboxGroup.vue'
-import { useRoute } from 'nuxt/app'
 
 const props = defineProps<{
   merchants: Merchant[]
 }>()
-const route = useRoute()
 const router = useRouter()
-
+const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
 const searchMerchant = ref<string>('')
-const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string[] | string | undefined
-  if (Array.isArray(merchantIds)) {
-    return merchantIds.map((id: string) => +id)
-  }
-  if (merchantIds) {
-    return [+merchantIds]
-  }
-  return []
-})
 
-const selectedMerchants = ref(merchantNumberIds.value)
+const selectedMerchants = ref(merchantIdsFromQuery.value)
 const merchantsFiltered = computed(() => {
-  return props.merchants.filter(merchant => merchant.name.toLowerCase().includes(searchMerchant.value.toLowerCase())) as CheckboxGroupItem[]
+  return props.merchants.filter(merchant => merchant.name.toLowerCase()
+    .includes(searchMerchant.value.toLowerCase())) as CheckboxGroupItem[]
 })
 
 watch(selectedMerchants, (value) => {
+  const queryValue = value.join(',')
+  let merchantIdsQuery
+  if (queryValue) {
+    merchantIdsQuery = { merchantIds: queryValue }
+  }
   router.push({
-    query: { merchantIds: value },
+    query: merchantIdsQuery,
   })
 })
 </script>
