@@ -5,7 +5,7 @@
         فیلترها
       </span>
       <span
-        v-if="route.path !== '/products'"
+        v-if="isFilterSelected"
         class="text-xs text-red-500 flex items-center gap-1 cursor-pointer"
         @click="$router.push('/products')"
       >
@@ -78,6 +78,12 @@ watch(merchantIdsFromQuery, (value) => {
   }
   merchantIdsQuery.value = { merchantIds: merchantIdsToString }
 }, { immediate: true })
+
+const isFilterSelected = computed(() => {
+  const hasQuery = Object.keys(route.query).length > 0
+  const hasParams = Object.keys(route.params).length > 0
+  return hasQuery || hasParams
+})
 </script>
 
 <style scoped>
