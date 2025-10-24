@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <div>فروشگاه‌ها</div>
+  <div class="flex flex-col gap-6">
+    <div class="text-gray-400 text-sm">
+      فروشگاه‌ها
+    </div>
     <UInput
       v-model="searchMerchant"
       icon="i-lucide-search"
