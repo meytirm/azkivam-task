@@ -102,12 +102,10 @@ const initialData = computed(() => {
   if (pending.value) {
     return []
   }
-  return products.value ? products.value.data : []
+  return products.value ? products.value : []
 })
 
-const productApiFunc = (page: number, size: number) => productApiFunction(page, size).then(res => res.data)
-
-const { items, isLoading } = useInfiniteScroll<Product>(productApiFunc, initialData, pageSize)
+const { items, isLoading } = useInfiniteScroll<Product>(productApiFunction, initialData, pageSize)
 </script>
 
 <style scoped>
