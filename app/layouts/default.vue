@@ -37,9 +37,11 @@ const merchantNumberIds = computed(() => {
   return []
 })
 
-watch(merchantNumberIds, (value) => {
-  merchantIdsFromQuery.value = value
-})
+watch(merchantNumberIds, (value, oldValue) => {
+  if (value.length > 0 || (value.length === 0 && (oldValue && oldValue.length > 0 && oldValue !== value))) {
+    merchantIdsFromQuery.value = value
+  }
+}, { immediate: true })
 </script>
 
 <style scoped>
