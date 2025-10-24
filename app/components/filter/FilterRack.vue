@@ -19,9 +19,13 @@
           class="pb-3.5 text-sm text-muted"
         >
           <NuxtLink
-            :href="`/products/${category.id}/${category.slug}`"
-            exact-active-class="font-bold text-black"
-          >{{ category.name }}</NuxtLink>
+            :to="{
+              name: 'products-categoryId-slug',
+              params: { categoryId: category.id, slug: category.slug },
+              query: merchantIdsQuery }"
+          >
+            {{ category.name }}
+          </NuxtLink>
         </p>
       </template>
     </UAccordion>
@@ -42,13 +46,24 @@ const props = defineProps<{
   merchants: Merchant[]
 }>()
 
+const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
 const accordionState = useState<string[]>('accordionState')
+const merchantIdsQuery = ref<{ merchantIds: string } | undefined>(undefined)
 
 const parenCategories = computed(() => props.categories
   .filter(category => category.parent === null).map(parentCategory => ({
     ...parentCategory,
     children: props.categories.filter(category => category.parent === parentCategory.id),
   })))
+
+watch(merchantIdsFromQuery, (value) => {
+  const merchantIdsToString = value.join(',')
+  if (!merchantIdsToString) {
+    merchantIdsQuery.value = undefined
+    return
+  }
+  merchantIdsQuery.value = { merchantIds: merchantIdsToString }
+}, { immediate: true })
 </script>
 
 <style scoped>
