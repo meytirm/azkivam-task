@@ -32,12 +32,9 @@ const router = useRouter()
 
 const searchMerchant = ref<string>('')
 const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string[] | string | undefined
-  if (Array.isArray(merchantIds)) {
-    return merchantIds.map((id: string) => +id)
-  }
+  const merchantIds = (route.query.merchantIds) as string | undefined
   if (merchantIds) {
-    return [+merchantIds]
+    return merchantIds.split(',').map((id: string) => +id)
   }
   return []
 })
@@ -48,8 +45,13 @@ const merchantsFiltered = computed(() => {
 })
 
 watch(selectedMerchants, (value) => {
+  const queryValue = value.join(',')
+  let merchantIdsQuery
+  if (queryValue) {
+    merchantIdsQuery = { merchantIds: queryValue }
+  }
   router.push({
-    query: { merchantIds: value },
+    query: merchantIdsQuery,
   })
 })
 </script>

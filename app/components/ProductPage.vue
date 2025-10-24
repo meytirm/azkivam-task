@@ -79,12 +79,9 @@ const pageSize = 12
 const filterModal = ref<boolean>(false)
 
 const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string[] | string | undefined
-  if (Array.isArray(merchantIds)) {
-    return merchantIds.map((id: string) => +id)
-  }
+  const merchantIds = (route.query.merchantIds) as string | undefined
   if (merchantIds) {
-    return [+merchantIds]
+    return merchantIds.split(',').map((id: string) => +id)
   }
   return []
 })
