@@ -1,5 +1,11 @@
 <template>
   <UCard>
+    <div class="font-bold mb-8 text-xl">
+      فیلترها
+    </div>
+    <div class="font-bold text-sm mb-4">
+      دسته‌بندی‌ها
+    </div>
     <UAccordion
       v-model="accordionState"
       :items="parenCategories"
@@ -12,13 +18,15 @@
           :key="category.id"
           class="pb-3.5 text-sm text-muted"
         >
-          <NuxtLink :href="`/products/${category.id}/${category.slug}`">{{ category.name }}</NuxtLink>
+          <NuxtLink
+            :href="`/products/${category.id}/${category.slug}`"
+            exact-active-class="font-bold text-black"
+          >{{ category.name }}</NuxtLink>
         </p>
       </template>
     </UAccordion>
     <USeparator
-      class="my-5"
-      color="info"
+      class="my-8"
     />
     <FilterMerchants :merchants="merchants" />
   </UCard>
