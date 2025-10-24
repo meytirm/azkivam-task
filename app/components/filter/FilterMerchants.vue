@@ -46,6 +46,10 @@ watch(selectedMerchants, (value) => {
     query: merchantIdsQuery,
   })
 })
+
+watch(merchantIdsFromQuery, (value) => {
+  selectedMerchants.value = value
+})
 </script>
 
 <style scoped>
