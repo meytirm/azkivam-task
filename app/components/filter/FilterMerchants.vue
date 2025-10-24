@@ -2,6 +2,7 @@
   <div>
     <div>فروشگاه‌ها</div>
     <UInput
+      v-model="searchMerchant"
       icon="i-lucide-search"
       size="md"
       variant="outline"
@@ -26,6 +27,8 @@ const props = defineProps<{
 }>()
 const route = useRoute()
 const router = useRouter()
+
+const searchMerchant = ref<string>('')
 const merchantNumberIds = computed(() => {
   const merchantIds = (route.query.merchantIds) as string[] | string | undefined
   if (Array.isArray(merchantIds)) {
@@ -38,7 +41,9 @@ const merchantNumberIds = computed(() => {
 })
 
 const selectedMerchants = ref(merchantNumberIds.value)
-const merchantsFiltered = props.merchants as CheckboxGroupItem[]
+const merchantsFiltered = computed(() => {
+  return props.merchants.filter(merchant => merchant.name.toLowerCase().includes(searchMerchant.value.toLowerCase())) as CheckboxGroupItem[]
+})
 
 watch(selectedMerchants, (value) => {
   router.push({
