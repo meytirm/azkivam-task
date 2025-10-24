@@ -25,7 +25,21 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
 useState('accordionState', () => [])
+const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery', () => [])
+
+const merchantNumberIds = computed(() => {
+  const merchantIds = (route.query.merchantIds) as string | undefined
+  if (merchantIds) {
+    return merchantIds.split(',').map((id: string) => +id)
+  }
+  return []
+})
+
+watch(merchantNumberIds, (value) => {
+  merchantIdsFromQuery.value = value
+})
 </script>
 
 <style scoped>

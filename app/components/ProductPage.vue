@@ -73,20 +73,14 @@
 <script setup lang="ts">
 import type { Product } from '~~/types/products'
 
+const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
+
 const route = useRoute()
 const categoryId = route.params.categoryId as string
 const pageSize = 12
 const filterModal = ref<boolean>(false)
 
-const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string | undefined
-  if (merchantIds) {
-    return merchantIds.split(',').map((id: string) => +id)
-  }
-  return []
-})
-
-const { productApiFunction, products, pending, error, refresh } = useProductApis(categoryId, merchantNumberIds, pageSize)
+const { productApiFunction, products, pending, error, refresh } = useProductApis(categoryId, merchantIdsFromQuery, pageSize)
 const categoriesApi = useCategories()
 const merchantsApi = useMerchants()
 
