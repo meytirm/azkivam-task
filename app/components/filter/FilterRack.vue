@@ -1,7 +1,17 @@
 <template>
   <UCard>
-    <div class="font-bold mb-8 text-xl">
-      فیلترها
+    <div class="flex items-center justify-between mb-8">
+      <span class="font-bold text-xl">
+        فیلترها
+      </span>
+      <span
+        v-if="route.path !== '/products'"
+        class="text-xs text-red-500 flex items-center gap-1 cursor-pointer"
+        @click="$router.push('/products')"
+      >
+        <UIcon name="i-lucide-trash" />
+        پاک کردن فیلتر
+      </span>
     </div>
     <div class="font-bold text-sm mb-4">
       دسته‌بندی‌ها
@@ -22,7 +32,9 @@
             :to="{
               name: 'products-categoryId-slug',
               params: { categoryId: category.id, slug: category.slug },
-              query: merchantIdsQuery }"
+              query: merchantIdsQuery,
+            }"
+            exact-active-class="font-bold"
           >
             {{ category.name }}
           </NuxtLink>
@@ -45,6 +57,8 @@ const props = defineProps<{
   categories: Category[]
   merchants: Merchant[]
 }>()
+
+const route = useRoute()
 
 const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
 const accordionState = useState<string[]>('accordionState')
