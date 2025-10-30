@@ -1,0 +1,48 @@
+interface Filter<T> {
+  key: string
+  parse: (value: string) => T
+  stringify: (value: T) => string
+  defaultValue: T
+}
+
+// eslint-disable-next-line
+export function useFilter(filters: Filter<any>[]) {
+  const router = useRouter()
+  const route = useRoute()
+
+  filters.forEach((filter) => {
+    const queryVal = route.query[filter.key] as string | undefined
+    const parsed = queryVal ? filter.parse(queryVal) : filter.defaultValue
+    // eslint-disable-next-line
+    const state = useState<any>(`${filter.key}FromQuery`, () => parsed)
+
+    watch(state, (newVal) => {
+      const query = { ...route.query }
+      const stringified = filter.stringify(newVal)
+
+      if (stringified) query[filter.key] = stringified
+      // eslint-disable-next-line
+      else delete query[filter.key]
+      router.replace({ query })
+    }, { deep: true })
+  })
+
+  function clearAllFilters() {
+    filters.forEach((filter) => {
+      // eslint-disable-next-line
+      const filterValues = useState<any>(`${filter.key}FromQuery`)
+      filterValues.value = filter.defaultValue
+    })
+    return router.push({ query: {} })
+  }
+
+  const isFilterSelected = computed(() => {
+    return filters.some((filter) => {
+      // eslint-disable-next-line
+      const filterValues = useState<any>(`${filter.key}FromQuery`)
+      return JSON.stringify(filterValues.value) !== JSON.stringify(filter.defaultValue)
+    })
+  })
+
+  return { clearAllFilters, isFilterSelected }
+}
