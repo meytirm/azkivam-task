@@ -25,23 +25,11 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
+import { useProductFilter } from '~/composables/filter/useProductFilter'
+
 useState('accordionState', () => [])
-const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery', () => [])
 
-const merchantNumberIds = computed(() => {
-  const merchantIds = (route.query.merchantIds) as string | undefined
-  if (merchantIds) {
-    return merchantIds.split(',').map((id: string) => +id)
-  }
-  return []
-})
-
-watch(merchantNumberIds, (value, oldValue) => {
-  if (value.length > 0 || (value.length === 0 && (oldValue && oldValue.length > 0 && oldValue !== value))) {
-    merchantIdsFromQuery.value = value
-  }
-}, { immediate: true })
+useProductFilter()
 </script>
 
 <style scoped>
