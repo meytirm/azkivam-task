@@ -7,7 +7,7 @@
       <span
         v-if="isFilterSelected"
         class="text-xs text-red-500 flex items-center gap-1 cursor-pointer"
-        @click="$router.push('/products')"
+        @click="clearAllFiltersAndParams"
       >
         <UIcon name="i-lucide-trash" />
         پاک کردن فیلتر
@@ -32,7 +32,7 @@
             :to="{
               name: 'products-categoryId-slug',
               params: { categoryId: category.id, slug: category.slug },
-              query: merchantIdsQuery,
+              query: { ...$route.query },
             }"
             exact-active-class="font-bold"
           >
@@ -52,17 +52,16 @@
 import type { Category } from '~~/types/categories'
 import type { Merchant } from '~~/types/merchants'
 import { useState } from '#app'
+import { useProductFilter } from '~/composables/filter/useProductFilter'
 
 const props = defineProps<{
   categories: Category[]
   merchants: Merchant[]
 }>()
 
-const route = useRoute()
+const router = useRouter()
 
-const merchantIdsFromQuery = useState<number[]>('merchantIdsFromQuery')
 const accordionState = useState<string[]>('accordionState')
-const merchantIdsQuery = ref<{ merchantIds: string } | undefined>(undefined)
 
 const parenCategories = computed(() => props.categories
   .filter(category => category.parent === null).map(parentCategory => ({
@@ -70,20 +69,13 @@ const parenCategories = computed(() => props.categories
     children: props.categories.filter(category => category.parent === parentCategory.id),
   })))
 
-watch(merchantIdsFromQuery, (value) => {
-  const merchantIdsToString = value.join(',')
-  if (!merchantIdsToString) {
-    merchantIdsQuery.value = undefined
-    return
-  }
-  merchantIdsQuery.value = { merchantIds: merchantIdsToString }
-}, { immediate: true })
+const { clearAllFilters, isFilterSelected } = useProductFilter()
 
-const isFilterSelected = computed(() => {
-  const hasQuery = Object.keys(route.query).length > 0
-  const hasParams = Object.keys(route.params).length > 0
-  return hasQuery || hasParams
-})
+function clearAllFiltersAndParams() {
+  clearAllFilters().then(() => {
+    router.push('/products')
+  })
+}
 </script>
 
 <style scoped>
