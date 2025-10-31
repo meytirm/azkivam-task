@@ -13,8 +13,7 @@ export function useFilter(filters: Filter<any>[]) {
   filters.forEach((filter) => {
     const queryVal = route.query[filter.key] as string | undefined
     const parsed = queryVal ? filter.parse(queryVal) : filter.defaultValue
-    // eslint-disable-next-line
-    const state = useState<any>(`${filter.key}FromQuery`, () => parsed)
+    const state = useState(`${filter.key}FromQuery`, () => parsed)
 
     watch(state, (newVal) => {
       const query = { ...route.query }
@@ -29,8 +28,7 @@ export function useFilter(filters: Filter<any>[]) {
 
   function clearAllFilters() {
     filters.forEach((filter) => {
-      // eslint-disable-next-line
-      const filterValues = useState<any>(`${filter.key}FromQuery`)
+      const filterValues = useState(`${filter.key}FromQuery`)
       filterValues.value = filter.defaultValue
     })
     return router.push({ query: {} })
@@ -38,8 +36,7 @@ export function useFilter(filters: Filter<any>[]) {
 
   const isFilterSelected = computed(() => {
     return filters.some((filter) => {
-      // eslint-disable-next-line
-      const filterValues = useState<any>(`${filter.key}FromQuery`)
+      const filterValues = useState(`${filter.key}FromQuery`)
       return JSON.stringify(filterValues.value) !== JSON.stringify(filter.defaultValue)
     })
   })
