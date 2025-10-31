@@ -18,7 +18,6 @@ export function useFilter(filters: Filter<any>[]) {
     if (!initializedFilter) {
       initializedFilter = true
       watch(state, (newVal) => {
-        console.log('here')
         const query = { ...route.query }
         const stringified = filter.stringify(newVal)
 
