@@ -4,26 +4,30 @@ interface Filter<T> {
   stringify: (value: T) => string
   defaultValue: T
 }
+let initializedFilter = false
 
 // eslint-disable-next-line
 export function useFilter(filters: Filter<any>[]) {
   const router = useRouter()
   const route = useRoute()
-
   filters.forEach((filter) => {
     const queryVal = route.query[filter.key] as string | undefined
     const parsed = queryVal ? filter.parse(queryVal) : filter.defaultValue
     const state = useState(`${filter.key}FromQuery`, () => parsed)
 
-    watch(state, (newVal) => {
-      const query = { ...route.query }
-      const stringified = filter.stringify(newVal)
+    if (!initializedFilter) {
+      initializedFilter = true
+      watch(state, (newVal) => {
+        console.log('here')
+        const query = { ...route.query }
+        const stringified = filter.stringify(newVal)
 
-      if (stringified) query[filter.key] = stringified
-      // eslint-disable-next-line
-      else delete query[filter.key]
-      router.replace({ query })
-    }, { deep: true })
+        if (stringified) query[filter.key] = stringified
+        // eslint-disable-next-line
+        else delete query[filter.key]
+        router.replace({ query })
+      }, { deep: true })
+    }
   })
 
   function clearAllFilters() {
