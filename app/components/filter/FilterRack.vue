@@ -5,7 +5,7 @@
         فیلترها
       </span>
       <span
-        v-if="isFilterSelected"
+        v-if="isFilterAndParamSelected"
         class="text-xs text-red-500 flex items-center gap-1 cursor-pointer"
         @click="clearAllFiltersAndParams"
       >
@@ -58,7 +58,7 @@ const props = defineProps<{
   categories: Category[]
   merchants: Merchant[]
 }>()
-
+const route = useRoute()
 const router = useRouter()
 
 const accordionState = useState<string[]>('accordionState')
@@ -76,6 +76,11 @@ function clearAllFiltersAndParams() {
     router.push('/products')
   })
 }
+
+const isFilterAndParamSelected = computed(() => {
+  const hasParams = Object.keys(route.params).length > 0
+  return isFilterSelected.value || hasParams
+})
 </script>
 
 <style scoped>
